@@ -1,0 +1,31 @@
+# EXAMPLE ALIASES — this shows the structure of knowledge_base/aliases.yaml
+# Do NOT put this in knowledge_base/ directly — it is a reference only.
+# Manage aliases via CLI: qa-gen aliases add "phrase" --maps-to <id>
+# Or edit knowledge_base/aliases.yaml directly.
+
+# Structure:
+#   components:
+#     <component_id>:
+#       - phrase 1        ← plain-language terms your QA team uses
+#       - phrase 2        ← matched case-insensitively
+#   forms:
+#     <form_id>:
+#       - phrase 1
+
+components:
+  date_picker_v2:
+    - calendar thing
+    - date field
+    - calendar picker
+    - the calendar
+
+  typeahead_select_v3:
+    - search box
+    - search dropdown
+    - the dropdown search
+
+forms:
+  invoice_form:
+    - invoice page
+    - billing form
+    - invoice entry screen

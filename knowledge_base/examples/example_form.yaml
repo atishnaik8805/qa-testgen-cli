@@ -1,0 +1,48 @@
+# EXAMPLE FORM — copy to knowledge_base/forms/<your_form_id>.yaml and fill in real values.
+# The filename must match form_id exactly: invoice_form.yaml for form_id: invoice_form
+
+form_id: invoice_form                   # snake_case, must match JIRA label AND filename
+display_name: Invoice Entry Form        # human-readable name (shown in qa-gen forms list)
+module: Billing                         # application module/section this form belongs to
+save_behavior: SAVE_EXPLICIT            # SAVE_EXPLICIT | SAVE_ON_BLUR | SAVE_ON_SUBMIT | SAVE_AUTO
+save_trigger: "click → [data-testid=\"save-invoice-btn\"]"  # exact UI action that triggers save
+validation_timing: VALIDATE_ON_SAVE     # VALIDATE_ON_SAVE | VALIDATE_ON_BLUR | VALIDATE_ON_CHANGE
+
+# extends: base_form                    # optional — inherit fields from a parent form
+#                                       # child fields override parent fields with the same id
+
+fields:
+  - id: vendor_name                     # unique within this form, snake_case
+    label: Vendor Name                  # label shown in the UI — used in test step language
+    type: text                          # text | number | date | select | textarea | checkbox | file
+    required: true                      # whether field is required for save
+    save_on_blur: false                 # true = blur on THIS field triggers a save (overrides form-level)
+    component: null                     # component_id if this field uses a shared widget, else null
+
+  - id: invoice_date
+    label: Invoice Date
+    type: date
+    required: true
+    save_on_blur: false
+    component: date_picker_v2           # references knowledge_base/components/date_picker_v2.yaml
+
+  - id: amount
+    label: Amount
+    type: number
+    required: true
+    save_on_blur: false
+    component: null
+
+  - id: currency
+    label: Currency
+    type: select
+    required: true
+    save_on_blur: false
+    component: typeahead_select_v3      # references knowledge_base/components/typeahead_select_v3.yaml
+
+  - id: notes
+    label: Notes
+    type: textarea
+    required: false
+    save_on_blur: false
+    component: null

@@ -1,0 +1,61 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ── Build / packaging ─────────────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+pip-wheel-metadata/
+MANIFEST
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Conda / Mamba ─────────────────────────────────────────────────────────────
+conda-bld/
+.conda/
+
+# ── Testing & coverage ────────────────────────────────────────────────────────
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# ── Project context docs (AI-generated, not for distribution) ─────────────────
+.context/
+
+# ── Secrets & config ──────────────────────────────────────────────────────────
+# ~/.qa-gen/.env lives outside the repo — this catches any accidental local .env files
+.env
+.env.*
+.envrc
+
+# ── qa-gen generated output ───────────────────────────────────────────────────
+# test case exports written by qa-gen tests --export
+test-cases-*.md
+test-cases-*.json
+
+# debug log (normally goes to ~/.qa-gen/debug.log, but guard against local writes)
+debug.log
+
+# ── Claude Code local settings (machine-specific) ────────────────────────────
+.claude/settings.local.json
+
+# ── OS / editor ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/

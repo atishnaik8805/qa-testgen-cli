@@ -1,0 +1,28 @@
+# EXAMPLE COMPONENT — copy to knowledge_base/components/<your_component_id>.yaml and fill in real values.
+# The filename must match id exactly: date_picker_v2.yaml for id: date_picker_v2
+
+id: date_picker_v2                      # snake_case, must match filename AND component refs in form YAMLs
+label: Date Picker v2                   # human-readable name (shown in qa-gen components list)
+
+description: >                          # plain English — this is the KEY field for AI quality.
+  A date input that opens a calendar overlay on click. User selects a date by
+  clicking a day cell, or types directly in DD/MM/YYYY format. Calendar closes
+  automatically on selection. Blur fires after calendar closes.
+  Typing an invalid format shows an inline error on blur.
+  Write this as if explaining to a tester who has never seen the widget.
+
+interaction_steps:                      # ordered steps for interacting with this component
+  - click the date field to open the calendar overlay
+  - select a date by clicking a day cell, or type in DD/MM/YYYY format
+  - calendar closes automatically; field value updates to selected date
+  - blur event fires after calendar close
+  - if typed value is invalid, inline error appears: "Please enter a valid date (DD/MM/YYYY)"
+  - empty required field shows required error on save attempt
+
+save_behavior_notes: >                  # optional — clarify save semantics specific to this component
+  Triggers blur on close. Whether blur causes a save depends on the parent form's
+  save_behavior — this component has no built-in auto-save.
+
+forms:                                  # optional — list of form_ids that use this component
+  - invoice_form                        # informational only; does not affect resolution
+  - expense_form

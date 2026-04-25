@@ -1,0 +1,8 @@
+# QA vocabulary aliases — phrase → form/component ID mapping
+# Add phrases your team uses to describe forms and components.
+# CLI: qa-gen aliases add "phrase" --maps-to <id>
+# Phrases are matched case-insensitively and trimmed.
+
+components: {}
+
+forms: {}
