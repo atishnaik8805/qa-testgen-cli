@@ -1,4 +1,4 @@
-# qa-gen: AI-Powered QA Test Case Generator
+# qa-testgen: AI-Powered QA Test Case Generator
 
 `qa-gen` is a CLI tool designed to bridge the gap between JIRA user stories and accurate UI test cases. By using a localized Knowledge Base (KB) of your application's UI behavior, it generates Gherkin-formatted test cases that reflect your actual product, eliminating the "hallucinations" common in generic AI generation.
 
