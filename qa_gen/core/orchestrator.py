@@ -1,11 +1,14 @@
+import os
 import sys
 
 from qa_gen.config.settings import Settings
-from qa_gen.core.debug_log import log as _debug_log
-from qa_gen.core import context_assembler, form_resolver, gherkin_parser
 from qa_gen.core import component_resolver as comp_res
+from qa_gen.core import context_assembler, form_resolver, gherkin_parser
 from qa_gen.core.ai.base import AIProvider
+from qa_gen.core.debug_log import log as _debug_log
 from qa_gen.core.jira_client import JiraClient
+from qa_gen.core.project_root import find_project_root
+from qa_gen.kb.semantic_search import SemanticSearchEngine
 from qa_gen.models.test_case import TestCase
 
 # V2:
@@ -19,9 +22,11 @@ def _select_provider(settings: Settings) -> AIProvider:
     provider = settings.AI_PROVIDER.lower()
     if provider == "anthropic":
         from qa_gen.core.ai.claude_client import ClaudeProvider
+
         return ClaudeProvider(settings.AI_API_KEY, settings.AI_MODEL_NAME)
     elif provider == "gemini":
         from qa_gen.core.ai.gemini_client import GeminiProvider
+
         return GeminiProvider(settings.AI_API_KEY, settings.AI_MODEL_NAME)
     else:
         print(f"Unknown AI_PROVIDER: {settings.AI_PROVIDER!r}", file=sys.stderr)
@@ -46,14 +51,18 @@ def _build_story_prompt(story_data: dict) -> str:
 
 def _blur_save_warnings(test_cases: list[TestCase], form) -> None:
     from qa_gen.models.form import Form
+
     if not isinstance(form, Form):
         return
 
     blur_behaviors = {"SAVE_ON_BLUR"}
     if form.save_behavior not in blur_behaviors:
         has_negation = any(
-            "blur" in " ".join(tc.steps).lower() and
-            any(neg in " ".join(tc.steps).lower() for neg in ("not save", "not persist", "does not"))
+            "blur" in " ".join(tc.steps).lower()
+            and any(
+                neg in " ".join(tc.steps).lower()
+                for neg in ("not save", "not persist", "does not")
+            )
             for tc in test_cases
         )
         if not has_negation:
@@ -66,8 +75,8 @@ def _blur_save_warnings(test_cases: list[TestCase], form) -> None:
         if not field.save_on_blur:
             continue
         has_blur_save = any(
-            field.label.lower() in " ".join(tc.steps).lower() and
-            "blur" in " ".join(tc.steps).lower()
+            field.label.lower() in " ".join(tc.steps).lower()
+            and "blur" in " ".join(tc.steps).lower()
             for tc in test_cases
         )
         if not has_blur_save:
@@ -102,6 +111,7 @@ def run(
     # alias_resolver = AliasResolver(client, embedding_client)
 
     from qa_gen.core.alias_resolver import AliasResolver
+
     alias_resolver = AliasResolver(kb_path)
 
     from qa_gen.cli.display import spinner
@@ -112,20 +122,34 @@ def run(
     with spinner("Fetching JIRA story..."):
         story_data = jira_client.fetch_story(story_id)
         if verbose:
-            _debug_log(f"fetched story: {story_id} summary={story_data.get('fields', {}).get('summary', '')}")
+            summary = story_data.get("fields", {}).get("summary", "")
+            _debug_log(f"fetched story: {story_id} summary={summary}")
+
+    project_root = find_project_root()
+    index_path = project_root / ".qa-gen" / "search_index.json"
+    threshold = float(os.environ.get("QA_GEN_SIMILARITY_THRESHOLD", "0.75"))
+    engine = SemanticSearchEngine(kb_path, index_path, threshold)
+    engine.update_index()
 
     with spinner("Resolving form..."):
         if form_override:
             form = form_resolver.load_form(kb_path, form_override)
             if not form:
-                print(f"Form '{form_override}' not in KB — add YAML to {kb_path}/forms/", file=sys.stderr)
+                print(
+                    f"Form '{form_override}' not in KB — add YAML to {kb_path}/forms/",
+                    file=sys.stderr,
+                )
                 raise SystemExit(3)
             form = form_resolver.flatten_inheritance(form, kb_path)
         else:
-            form, _ = form_resolver.resolve_form(story_data, kb_path, alias_resolver)
+            form, _ = form_resolver.resolve_form(
+                story_data, kb_path, alias_resolver, semantic_engine=engine
+            )
 
     with spinner("Resolving components..."):
-        components = comp_res.resolve_components(form, kb_path, alias_resolver)
+        components = comp_res.resolve_components(
+            form, kb_path, alias_resolver, semantic_engine=engine
+        )
 
     with spinner("Assembling context..."):
         context = context_assembler.assemble_context(form, components, kb_path)

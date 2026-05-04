@@ -3,6 +3,7 @@ from pathlib import Path
 
 import yaml
 
+from qa_gen.cli.display import err_console
 from qa_gen.models.form import Form
 
 
@@ -42,6 +43,7 @@ def resolve_form(
     story_data: dict,
     kb_path: Path,
     alias_resolver=None,
+    semantic_engine=None,
 ) -> tuple[Form, bool]:
     fields = story_data.get("fields", {})
     labels: list[str] = [lbl.get("name", "") for lbl in (fields.get("labels") or [])]
@@ -50,7 +52,7 @@ def resolve_form(
     known = {f.stem for f in forms_dir.glob("*.yaml")} if forms_dir.exists() else set()
 
     # Step 1: exact label match against known form IDs
-    matched = [l for l in labels if l and l in known]
+    matched = [lbl for lbl in labels if lbl and lbl in known]
     if matched:
         if len(matched) > 1:
             print(f"warning: multiple form labels found {matched}, using first", file=sys.stderr)
@@ -69,7 +71,28 @@ def resolve_form(
                 if form:
                     return flatten_inheritance(form, kb_path), False
 
-    # Step 3: prompt tester
+    # Step 3: semantic search
+    if semantic_engine:
+        for label in labels:
+            if not label:
+                continue
+            result = semantic_engine.search_form(label)
+            if result:
+                form_id, score = result
+                err_console.print(f"Resolved '{label}' → '{form_id}' (score: {score:.2f})")
+                form = load_form(kb_path, form_id)
+                if form:
+                    return flatten_inheritance(form, kb_path), False
+
+    # Non-TTY: exit when all steps miss
+    if not sys.stdin.isatty():
+        unresolved = next((lbl for lbl in labels if lbl), None)
+        if unresolved:
+            err_console.print(f"Unresolved label: '{unresolved}'")
+        err_console.print("Hint: add an alias in knowledge_base/aliases.yaml → forms section")
+        raise SystemExit(1)
+
+    # Step 4: interactive prompt
     print("warning: could not auto-detect form from labels", file=sys.stderr)
     if not known:
         print(f"No forms in KB — add YAML files to {forms_dir}/", file=sys.stderr)

@@ -3,6 +3,7 @@ from pathlib import Path
 
 import yaml
 
+from qa_gen.cli.display import err_console
 from qa_gen.models.component import Component
 from qa_gen.models.form import Form
 
@@ -23,6 +24,7 @@ def resolve_components(
     form: Form,
     kb_path: Path,
     alias_resolver=None,
+    semantic_engine=None,
 ) -> list[Component]:
     components: list[Component] = []
     seen: set[str] = set()
@@ -44,6 +46,20 @@ def resolve_components(
                 comp = load_component(kb_path, resolved_id)
                 if comp:
                     seen.add(resolved_id)
+                    components.append(comp)
+                    continue
+
+        # Semantic search
+        if semantic_engine:
+            result = semantic_engine.search_component(field.component)
+            if result:
+                comp_id, score = result
+                err_console.print(
+                    f"Resolved '{field.component}' → '{comp_id}' (score: {score:.2f})"
+                )
+                comp = load_component(kb_path, comp_id)
+                if comp and comp_id not in seen:
+                    seen.add(comp_id)
                     components.append(comp)
                     continue
 

@@ -7,3 +7,5 @@ dependencies:
   - pip
   - pip:
       - -e .
+      # optional: local semantic search (pip install "sentence-transformers>=2.7,<3")
+      # - sentence-transformers>=2.7,<3
