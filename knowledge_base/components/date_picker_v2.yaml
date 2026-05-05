@@ -19,7 +19,7 @@ interaction_steps:
   - the calendar closes automatically after selection
   - the field value updates to the selected date
   - a blur event fires after the calendar closes
-  - if the typed value is invalid, an inline error appears: "Please enter a valid date (DD/MM/YYYY)"
+  - 'if the typed value is invalid, an inline error appears: "Please enter a valid date (DD/MM/YYYY)"'
   - pressing Escape closes the calendar without selecting, and fires blur
 
 save_behavior_notes: >

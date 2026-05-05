@@ -14,13 +14,13 @@ description: >
 
 interaction_steps:
   - click the upload area to open the system file picker, OR drag a file onto the area
-  - for click: select a file in the system picker dialog
-  - for drag: drop the file onto the upload area
+  - 'for click: select a file in the system picker dialog'
+  - 'for drag: drop the file onto the upload area'
   - the filename and file size appear in a preview row below the upload zone
   - click the "Upload" button to confirm and upload the file
   - the uploaded file appears in the profile photo area
-  - selecting a file over 5MB shows: "File too large. Maximum size is 5MB."
-  - selecting an unsupported file type shows: "Unsupported file type. Use JPG, PNG, or GIF."
+  - 'selecting a file over 5MB shows: "File too large. Maximum size is 5MB."'
+  - 'selecting an unsupported file type shows: "Unsupported file type. Use JPG, PNG, or GIF."'
 
 save_behavior_notes: >
   This component always uses SAVE_EXPLICIT. Blur does not apply.

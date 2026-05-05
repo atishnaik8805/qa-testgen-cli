@@ -12,7 +12,7 @@ description: >
 
 interaction_steps:
   - click the Leave Type field to open the dropdown list
-  - the list shows four options: Annual Leave, Sick Leave, Personal Leave, Unpaid Leave
+  - 'the list shows four options: Annual Leave, Sick Leave, Personal Leave, Unpaid Leave'
   - click the desired option to select it
   - the dropdown closes and the selected value appears in the field
   - a blur event fires after the dropdown closes

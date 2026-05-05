@@ -46,7 +46,11 @@ def resolve_form(
     semantic_engine=None,
 ) -> tuple[Form, bool]:
     fields = story_data.get("fields", {})
-    labels: list[str] = [lbl.get("name", "") for lbl in (fields.get("labels") or [])]
+    raw_labels = fields.get("labels") or []
+    labels: list[str] = [
+        lbl.get("name", "") if isinstance(lbl, dict) else str(lbl)
+        for lbl in raw_labels
+    ]
 
     forms_dir = kb_path / "forms"
     known = {f.stem for f in forms_dir.glob("*.yaml")} if forms_dir.exists() else set()

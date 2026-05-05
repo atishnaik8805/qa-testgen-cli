@@ -18,12 +18,19 @@ def show_with_pager(content: str) -> None:
     if not sys.stdout.isatty():
         sys.stdout.write(content)
         return
-    pager = os.environ.get("PAGER", "less")
+    pager = os.environ.get("PAGER", "")
+    if not pager:
+        pager = "more" if sys.platform == "win32" else "less"
     with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False, encoding="utf-8") as f:
         f.write(content)
         tmp_path = f.name
     try:
-        subprocess.run([pager, tmp_path], check=False)
+        result = subprocess.run([pager, tmp_path], check=False)
+        if result.returncode != 0 and sys.platform == "win32":
+            # more.com failed — fall back to plain print
+            console.print(content)
+    except FileNotFoundError:
+        console.print(content)
     finally:
         os.unlink(tmp_path)
 

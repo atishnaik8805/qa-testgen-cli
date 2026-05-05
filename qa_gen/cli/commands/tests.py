@@ -126,6 +126,7 @@ def generate(
             else:
                 path = _write_json(test_cases, story_id)
             typer.echo(f"Written: {path}")
+            break
         elif action == "edit":
             test_cases = _edit_loop(test_cases, story_id, gherkin)
             gherkin = _gherkin_text(test_cases, story_id)
