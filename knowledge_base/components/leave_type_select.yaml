@@ -1,0 +1,26 @@
+id: leave_type_select
+label: Leave Type Select
+
+description: >
+  A dropdown field that lets the employee choose a leave type from a fixed list.
+  Options are: Annual Leave, Sick Leave, Personal Leave, Unpaid Leave.
+  Clicking the field opens the dropdown list immediately — no typing required.
+  The user selects an option by clicking it. The dropdown closes and the selected
+  value appears in the field. A blur event fires after the dropdown closes.
+  No search or filtering — the list is short and fixed.
+  The field shows placeholder text "Select leave type" when empty.
+
+interaction_steps:
+  - click the Leave Type field to open the dropdown list
+  - the list shows four options: Annual Leave, Sick Leave, Personal Leave, Unpaid Leave
+  - click the desired option to select it
+  - the dropdown closes and the selected value appears in the field
+  - a blur event fires after the dropdown closes
+  - clicking outside the dropdown without selecting closes it and fires blur
+
+save_behavior_notes: >
+  Fires blur when the dropdown closes. On SAVE_ON_BLUR forms, selecting a leave type
+  triggers an auto-save immediately.
+
+forms:
+  - leave_request_form

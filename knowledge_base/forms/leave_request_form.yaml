@@ -1,0 +1,50 @@
+form_id: leave_request_form
+display_name: Leave Request Form
+module: HR – Leave Management
+save_behavior: SAVE_ON_BLUR
+save_trigger: "blur event on each individual field (except submit action)"
+validation_timing: VALIDATE_ON_BLUR
+
+notes: >
+  Most fields auto-save on blur. The Submit button triggers a final validation pass
+  and creates the leave request record with status "Pending Approval".
+  Submit button is disabled until all required fields pass validation.
+  Editing a draft: Submit button is additionally disabled until at least one field is modified.
+
+fields:
+  - id: leave_type
+    label: Leave Type
+    type: select
+    required: true
+    save_on_blur: true
+    component: leave_type_select
+
+  - id: leave_start_date
+    label: Leave Start Date
+    type: date
+    required: true
+    save_on_blur: true
+    component: date_picker_v2
+
+  - id: leave_end_date
+    label: Leave End Date
+    type: date
+    required: true
+    save_on_blur: true
+    component: date_picker_v2
+
+  - id: reason
+    label: Reason for Leave
+    type: textarea
+    required: false
+    save_on_blur: true
+    component: null
+
+  - id: submit_action
+    label: Submit
+    type: hidden
+    required: false
+    save_on_blur: false
+    save_behavior: SAVE_EXPLICIT
+    save_trigger: "click → Submit button"
+    component: null

@@ -1,0 +1,32 @@
+id: date_picker_v2
+label: Date Picker v2
+
+description: >
+  A date input field that opens a calendar overlay when the user clicks it.
+  The user can select a date by clicking on the calendar grid, or by typing
+  directly in DD/MM/YYYY format into the field.
+  The calendar closes automatically after a date is selected.
+  A blur event fires on the field after the calendar closes.
+  If the typed value is not a valid date, an inline error appears after blur:
+  "Please enter a valid date (DD/MM/YYYY)".
+  Pressing Escape closes the calendar without selecting a date and fires blur.
+  The field shows placeholder text "DD/MM/YYYY" when empty.
+
+interaction_steps:
+  - click the date field to open the calendar overlay
+  - select a date by clicking the day cell in the calendar grid
+  - alternatively, type a date directly in DD/MM/YYYY format
+  - the calendar closes automatically after selection
+  - the field value updates to the selected date
+  - a blur event fires after the calendar closes
+  - if the typed value is invalid, an inline error appears: "Please enter a valid date (DD/MM/YYYY)"
+  - pressing Escape closes the calendar without selecting, and fires blur
+
+save_behavior_notes: >
+  This component fires a blur event when the calendar closes (on selection or Escape).
+  On SAVE_ON_BLUR forms (like leave_request_form), selecting a date triggers an auto-save.
+  On SAVE_EXPLICIT forms, selecting a date does NOT save — only the explicit save trigger does.
+  Cross-field validation (e.g. end date before start date) fires on blur of the second field.
+
+forms:
+  - leave_request_form

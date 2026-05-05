@@ -1,0 +1,46 @@
+form_id: leave_approval_form
+display_name: Leave Approval Form
+module: HR – Leave Management
+save_behavior: SAVE_ON_BLUR
+save_trigger: "blur event on Manager Notes; explicit click for Approve/Reject buttons"
+validation_timing: VALIDATE_ON_BLUR
+
+notes: >
+  Manager Notes auto-saves on blur with a subtle "Saved" indicator.
+  Decision (Approve/Reject radio) must be selected before either action button is clickable.
+  Approve and Reject buttons are explicit saves — they also change the request status and
+  trigger an email notification to the employee.
+  The employee's leave details panel is read-only — no save behavior applies.
+
+fields:
+  - id: manager_notes
+    label: Manager Notes
+    type: textarea
+    required: false
+    save_on_blur: true
+    component: null
+
+  - id: decision
+    label: Decision
+    type: radio
+    required: true
+    save_on_blur: false
+    component: null
+
+  - id: approve_action
+    label: Approve
+    type: hidden
+    required: false
+    save_on_blur: false
+    save_behavior: SAVE_EXPLICIT
+    save_trigger: "click → Approve button"
+    component: null
+
+  - id: reject_action
+    label: Reject
+    type: hidden
+    required: false
+    save_on_blur: false
+    save_behavior: SAVE_EXPLICIT
+    save_trigger: "click → Reject button"
+    component: null

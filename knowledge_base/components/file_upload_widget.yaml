@@ -1,0 +1,31 @@
+id: file_upload_widget
+label: File Upload Widget
+
+description: >
+  A file upload area that accepts files via click or drag-and-drop.
+  Clicking the area opens the system file picker. Dragging a file onto the area
+  queues it immediately without a file picker dialog. After selecting or dropping a
+  file, the filename and file size appear in a preview row below the upload area.
+  The user must click the "Upload" button to confirm and complete the upload.
+  Closing the picker without selecting a file makes no change to the field.
+  Only one file can be uploaded at a time — selecting a new file replaces the preview.
+  Accepted types: JPG, PNG, GIF. Max size: 5MB. Exceeded size shows error inline.
+  Blur does NOT apply to this component — save is always explicit via the Upload button.
+
+interaction_steps:
+  - click the upload area to open the system file picker, OR drag a file onto the area
+  - for click: select a file in the system picker dialog
+  - for drag: drop the file onto the upload area
+  - the filename and file size appear in a preview row below the upload zone
+  - click the "Upload" button to confirm and upload the file
+  - the uploaded file appears in the profile photo area
+  - selecting a file over 5MB shows: "File too large. Maximum size is 5MB."
+  - selecting an unsupported file type shows: "Unsupported file type. Use JPG, PNG, or GIF."
+
+save_behavior_notes: >
+  This component always uses SAVE_EXPLICIT. Blur does not apply.
+  Even on SAVE_ON_BLUR forms, photo changes require an explicit "Upload" button click.
+  The form field save_behavior does not override this component's upload confirmation step.
+
+forms:
+  - employee_profile_form

@@ -1,0 +1,58 @@
+form_id: employee_profile_form
+display_name: Employee Profile Form
+module: HR – Employee Management
+save_behavior: SAVE_ON_BLUR
+save_trigger: "blur event on each individual field (except profile photo upload)"
+validation_timing: VALIDATE_ON_BLUR
+
+notes: >
+  Inline-edit form: every text and select field auto-saves on blur.
+  A subtle "Saved" checkmark appears next to the field briefly after a successful save.
+  Email field validates format on blur before saving.
+  Profile photo uses an explicit upload flow — blur does not save photo changes.
+  Page title and nav display name update immediately after First Name or Last Name saves.
+
+fields:
+  - id: first_name
+    label: First Name
+    type: text
+    required: true
+    save_on_blur: true
+    component: null
+
+  - id: last_name
+    label: Last Name
+    type: text
+    required: true
+    save_on_blur: true
+    component: null
+
+  - id: email
+    label: Email
+    type: email
+    required: true
+    save_on_blur: true
+    component: null
+
+  - id: phone
+    label: Phone
+    type: text
+    required: false
+    save_on_blur: true
+    component: null
+
+  - id: department
+    label: Department
+    type: select
+    required: true
+    save_on_blur: true
+    component: typeahead_select_v1
+
+  - id: profile_photo
+    label: Profile Photo
+    type: file
+    required: false
+    save_on_blur: false
+    save_behavior: SAVE_EXPLICIT
+    save_trigger: "click → Upload button after selecting a file"
+    component: file_upload_widget

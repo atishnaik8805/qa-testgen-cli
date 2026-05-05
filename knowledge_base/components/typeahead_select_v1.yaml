@@ -1,0 +1,29 @@
+id: typeahead_select_v1
+label: Typeahead Select
+
+description: >
+  A dropdown field that filters its options in real time as the user types.
+  Clicking the field opens a search input at the top of the dropdown plus a list
+  of all available options. Typing in the search input narrows the visible options
+  to those that match the typed text. Clicking an option selects it, closes the
+  dropdown, and fires blur on the field. Pressing Escape cancels without selecting
+  and fires blur. Clicking outside the dropdown closes it and fires blur.
+  If no options match the typed text, a "No results found" message appears.
+  The field shows the selected value when closed, or placeholder text when empty.
+
+interaction_steps:
+  - click the field to open the dropdown with a search input and full option list
+  - type to filter options — list narrows to matches in real time
+  - click the desired option to select it
+  - the dropdown closes, the selected value appears in the field
+  - blur event fires after the dropdown closes
+  - pressing Escape cancels the selection and fires blur
+  - clicking outside also closes and fires blur
+
+save_behavior_notes: >
+  Fires blur when the dropdown closes by any means (select, Escape, click outside).
+  On SAVE_ON_BLUR forms, any selection (or cancellation after a prior value existed)
+  triggers an auto-save.
+
+forms:
+  - employee_profile_form

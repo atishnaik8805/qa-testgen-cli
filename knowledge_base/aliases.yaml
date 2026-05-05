@@ -3,6 +3,40 @@
 # CLI: qa-gen aliases add "phrase" --maps-to <id>
 # Phrases are matched case-insensitively and trimmed.
 
-components: {}
+forms:
+  leave_request_form:
+    - leave request
+    - leave form
+    - new leave request
+    - submit leave
+  leave_approval_form:
+    - leave approval
+    - approve leave
+    - manager leave review
+  employee_profile_form:
+    - employee profile
+    - profile form
+    - contact details form
+    - my profile
 
-forms: {}
+components:
+  date_picker_v2:
+    - date picker
+    - calendar input
+    - date field
+    - calendar popup
+    - the calendar
+  leave_type_select:
+    - leave type
+    - leave type dropdown
+    - type of leave
+  typeahead_select_v1:
+    - typeahead
+    - search dropdown
+    - department dropdown
+    - autocomplete field
+  file_upload_widget:
+    - file upload
+    - profile photo upload
+    - photo upload
+    - upload area
