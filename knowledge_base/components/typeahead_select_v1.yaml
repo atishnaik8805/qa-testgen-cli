@@ -25,5 +25,12 @@ save_behavior_notes: >
   On SAVE_ON_BLUR forms, any selection (or cancellation after a prior value existed)
   triggers an auto-save.
 
+required_test_patterns:
+  - blur_triggers_save
+  - blur_shows_validation_error_when_empty
+  - escape_cancels_without_selecting
+  - click_outside_closes_without_selecting
+  - no_results_found_message
+
 forms:
   - employee_profile_form

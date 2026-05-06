@@ -28,5 +28,12 @@ save_behavior_notes: >
   On SAVE_EXPLICIT forms, selecting a date does NOT save — only the explicit save trigger does.
   Cross-field validation (e.g. end date before start date) fires on blur of the second field.
 
+required_test_patterns:
+  - blur_triggers_save
+  - blur_shows_validation_error_when_empty
+  - escape_closes_calendar_without_saving
+  - invalid_date_format_shows_inline_error
+  - cross_field_date_validation_on_blur
+
 forms:
   - leave_request_form

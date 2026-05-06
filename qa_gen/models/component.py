@@ -9,4 +9,5 @@ class Component(BaseModel):
     description: str
     interaction_steps: list[str]
     save_behavior_notes: Optional[str] = None
+    required_test_patterns: list[str] = []
     forms: list[str] = []

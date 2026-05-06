@@ -24,6 +24,7 @@ fields:
     type: date
     required: true
     save_on_blur: true
+    min_date: today
     component: date_picker_v2
 
   - id: leave_end_date
@@ -31,6 +32,7 @@ fields:
     type: date
     required: true
     save_on_blur: true
+    min_date: today
     component: date_picker_v2
 
   - id: reason
@@ -38,6 +40,7 @@ fields:
     type: textarea
     required: false
     save_on_blur: true
+    max_length: 500
     component: null
 
   - id: submit_action

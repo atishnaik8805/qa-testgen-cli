@@ -12,6 +12,9 @@ class Field(BaseModel):
     component: Optional[str] = None
     save_behavior: Optional[str] = None
     save_trigger: Optional[str] = None
+    max_length: Optional[int] = None
+    min_date: Optional[str] = None
+    placeholder: Optional[str] = None
 
 
 class Form(BaseModel):

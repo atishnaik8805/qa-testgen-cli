@@ -22,5 +22,11 @@ save_behavior_notes: >
   Fires blur when the dropdown closes. On SAVE_ON_BLUR forms, selecting a leave type
   triggers an auto-save immediately.
 
+required_test_patterns:
+  - blur_triggers_save
+  - blur_shows_validation_error_when_empty
+  - click_outside_closes_without_selecting
+  - scenario_outline_for_all_options
+
 forms:
   - leave_request_form

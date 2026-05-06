@@ -69,6 +69,7 @@ def generate(
     form: Optional[str] = typer.Option(None, "--form", help="Override auto-detected form ID"),
     no_confirm: bool = typer.Option(False, "--no-confirm", help="Skip action prompt; auto-push"),
     verbose: bool = typer.Option(False, "--verbose", help="Write debug log to ~/.qa-gen/debug.log"),
+    max_tests: int = typer.Option(15, "--max-tests", help="Maximum test cases to generate"),
 ) -> None:
     _validate_story_id(story_id)
     export = export or []
@@ -89,6 +90,7 @@ def generate(
         no_confirm=no_confirm,
         verbose=verbose,
         settings=settings,
+        max_tests=max_tests,
     )
 
     gherkin = _gherkin_text(test_cases, story_id)

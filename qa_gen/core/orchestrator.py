@@ -15,7 +15,7 @@ from qa_gen.models.test_case import TestCase
 # from qa_gen.kb.embedding import EmbeddingClient
 # from qa_gen.kb import supabase_client as sb
 
-_MAX_TEST_CASES = 15
+_DEFAULT_MAX_TEST_CASES = 15
 
 
 def _select_provider(settings: Settings) -> AIProvider:
@@ -47,6 +47,24 @@ def _build_story_prompt(story_data: dict) -> str:
         parts.append(f"Acceptance Criteria:\n{ac}")
     parts.append("\nGenerate Gherkin test cases for this story.")
     return "\n\n".join(parts)
+
+
+def _validate_output(raw_output: str, form) -> list[str]:
+    from qa_gen.models.form import Form
+
+    if not isinstance(form, Form):
+        return []
+    failures = []
+    if "Background:" not in raw_output:
+        failures.append("missing Background block")
+    if "@" not in raw_output:
+        failures.append("missing @tags on scenarios")
+    if "Scenario Outline" not in raw_output:
+        failures.append("missing Scenario Outline for multi-value tests")
+    for f in form.fields:
+        if f.save_on_blur and f.label.lower() not in raw_output.lower():
+            failures.append(f"missing blur scenario for field '{f.id}'")
+    return failures
 
 
 def _blur_save_warnings(test_cases: list[TestCase], form) -> None:
@@ -94,6 +112,7 @@ def run(
     no_confirm: bool,
     verbose: bool,
     settings: Settings,
+    max_tests: int = _DEFAULT_MAX_TEST_CASES,
 ) -> list[TestCase]:
     if not sys.stdin.isatty() and not dry_run and not no_confirm:
         print(
@@ -153,7 +172,7 @@ def run(
 
     with spinner("Assembling context..."):
         context = context_assembler.assemble_context(form, components, kb_path)
-        system_prompt = context_assembler.assemble_system_prompt()
+        system_prompt = context_assembler.assemble_system_prompt(max_tests)
 
     provider = _select_provider(settings)
     story_prompt = _build_story_prompt(story_data)
@@ -178,12 +197,28 @@ def run(
         raw_output = provider.generate(system_prompt, context, strict_prompt)
         test_cases = gherkin_parser.parse_gherkin_to_test_cases(raw_output, story_id)
 
-    if len(test_cases) > _MAX_TEST_CASES:
+    structural_failures = _validate_output(raw_output, form)
+    if structural_failures:
+        missing = "; ".join(structural_failures)
+        if verbose:
+            _debug_log(f"structural validation failures: {missing}")
+        retry_prompt = (
+            story_prompt
+            + f"\n\nIMPORTANT: Previous output was rejected. Fix these issues: {missing}. "
+            "Output ONLY the complete corrected Gherkin Feature block."
+        )
+        with spinner("Retrying with structural fixes..."):
+            raw_output = provider.generate(system_prompt, context, retry_prompt)
+            if verbose:
+                _debug_log(f"retry response length={len(raw_output)}")
+        test_cases = gherkin_parser.parse_gherkin_to_test_cases(raw_output, story_id)
+
+    if len(test_cases) > max_tests:
         print(
-            f"warning: AI returned {len(test_cases)} test cases; truncating to {_MAX_TEST_CASES}",
+            f"warning: AI returned {len(test_cases)} test cases; truncating to {max_tests}",
             file=sys.stderr,
         )
-        test_cases = test_cases[:_MAX_TEST_CASES]
+        test_cases = test_cases[:max_tests]
 
     _blur_save_warnings(test_cases, form)
     return test_cases
